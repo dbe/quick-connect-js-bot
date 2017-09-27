@@ -76,7 +76,10 @@ function parseOptions() {
   return { gameCount, repeatTimeout, repeatForever };
 }
 
-function onGameOver() {
+function onGameOver(gameState) {
+  console.log(`\nGame over. You ${didIWin(gameState) ? 'Won' : 'Lost'}`);
+  console.log(`See game replay: http://quick-connect.herokuapp.com/preview/${gameState.gameId}`);
+
   if(repeatForever || --gameCount > 0) {
     console.log("About to start game again with repeatTimeout: ", repeatTimeout);
     setTimeout(startGame, repeatTimeout);
@@ -85,7 +88,7 @@ function onGameOver() {
 
 function isGameOver(gameState) {
   if(gameState.isGameOver) {
-    onGameOver();
+    onGameOver(gameState);
     return true;
   } else {
     return false;
@@ -149,6 +152,10 @@ function joinGame(userName, password) {
 }
 
 //Pure Game Logic Code
+function didIWin(gameState) {
+  return amIplayer0(gameState) === gameState.isPlayer0Winner;
+}
+
 function isMyTurn(gameState) {
   return amIplayer0(gameState) === isPlayer0Turn(gameState);
 }
