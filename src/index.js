@@ -7,7 +7,6 @@ if(process.argv[2] === '--help') {
 let { userName, password } = parseCredentials();
 let { gameCount, repeatTimeout, repeatForever } = parseOptions();
 
-
 var jayson = require('jayson');
 var Promise = require("bluebird");
 
@@ -20,6 +19,7 @@ var request = Promise.promisify(client.request, {context: client});
 import decideMove from './randomBot';
 
 startGame();
+
 
 
 //--------------------Lib Code--------------------//
@@ -50,15 +50,35 @@ function parseCredentials() {
 
 function parseOptions() {
   let gameCount = process.argv[4];
-  let repeatTimeout = process.argv[5];
+  let repeatTimeout = Number(process.argv[5]) || 10000;
   let repeatForever = (gameCount === 'infinity');
-
   gameCount = Number(gameCount) || 1;
+
+  console.log(`gameCount: ${gameCount}`);
+  console.log(`repeatTimeout: ${repeatTimeout}`);
+  console.log(`repeatForever: ${repeatForever}`);
 
   return { gameCount, repeatTimeout, repeatForever };
 }
 
+function onGameOver() {
+  if(repeatForever || --gameCount > 0) {
+    console.log("About to start game again with repeatTimeout: ", repeatTimeout);
+    setTimeout(startGame, repeatTimeout);
+  }
+}
+
+function isGameOver(gameState) {
+  if(gameState.isGameOver) {
+    onGameOver();
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function startGame() {
+  console.log("Starting game.");
   joinGame(userName, password).then(gameId => {
     console.log("Joined game: ", gameId);
     play(gameId);
@@ -67,7 +87,7 @@ function startGame() {
 
 function play(gameId) {
   waitForMyTurn(gameId).then(gameState => {
-    if(!gameState.isGameOver) {
+    if(!isGameOver(gameState)) {
       makeMove(gameId, gameState.moves.concat(decideMove(gameState))).then(() => {
         play(gameId);
       });
@@ -87,7 +107,7 @@ function pollUntilMyTurn(gameId, resolve) {
       resolve(gameState);
     } else {
       process.stdout.write('*');
-      if(!gameState.isGameOver) {
+      if(!isGameOver(gameState)) {
         setTimeout(pollUntilMyTurn, 1000, gameId, resolve);
       }
     }
