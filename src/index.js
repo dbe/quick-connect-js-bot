@@ -1,9 +1,10 @@
+//TODO: Use a standard unix
 if(process.argv[2] === '--help') {
   printHelp();
   process.exit(0);
 }
 
-let { username, password } = parseCredentials();
+let { userName, password } = parseCredentials();
 let { gameCount, repeatTimeout, repeatForever } = parseOptions();
 
 
@@ -16,7 +17,9 @@ const RPC_URL = 'http://quick-connect.herokuapp.com/rpc';
 var client = jayson.client.http(RPC_URL);
 var request = Promise.promisify(client.request, {context: client});
 
-// startGame();
+import decideMove from './randomBot';
+
+startGame();
 
 
 //--------------------Lib Code--------------------//
@@ -65,7 +68,7 @@ function startGame() {
 function play(gameId) {
   waitForMyTurn(gameId).then(gameState => {
     if(!gameState.isGameOver) {
-      makeMove(gameId, decideMove(gameState)).then(() => {
+      makeMove(gameId, gameState.moves.concat(decideMove(gameState))).then(() => {
         play(gameId);
       });
     }
