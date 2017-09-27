@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 //TODO: Use a standard unix
 if(process.argv[2] === '--help') {
   printHelp();
@@ -6,6 +8,7 @@ if(process.argv[2] === '--help') {
 
 let { userName, password } = parseCredentials();
 let { gameCount, repeatTimeout, repeatForever } = parseOptions();
+let decideMove = loadBot();
 
 var jayson = require('jayson');
 var Promise = require("bluebird");
@@ -16,8 +19,6 @@ const RPC_URL = 'http://quick-connect.herokuapp.com/rpc';
 var client = jayson.client.http(RPC_URL);
 var request = Promise.promisify(client.request, {context: client});
 
-import decideMove from './randomBot';
-
 startGame();
 
 
@@ -25,7 +26,9 @@ startGame();
 //--------------------Lib Code--------------------//
 
 function printHelp() {
-  console.log("Usage: node lib/iWinBot.js userName password gameCount repeatTimeout");
+  console.log("Usage: node lib/iWinBot.js userName password botname gameCount repeatTimeout");
+  console.log("botname must be the name of a file in the bots directory.");
+  console.log("Example: If your bot file is located at bots/myBot.js, just use 'myBot' as the argument");
   console.log("gameCount will default to 1");
   console.log("To repeat infinitely input 'infinity' as gameCount");
   console.log("repeatTimeout will default to 10 seconds");
@@ -48,9 +51,21 @@ function parseCredentials() {
   }
 }
 
+function loadBot() {
+  let botName = process.argv[4];
+  let botPath = `${__dirname}/bots/${botName}.js`;
+
+  if (!fs.existsSync(botPath)) {
+    console.log(`${botPath} doesn't exist. Please provide a valid bot.`)
+    process.exit(1);
+  }
+
+  return require(botPath).default;
+}
+
 function parseOptions() {
-  let gameCount = process.argv[4];
-  let repeatTimeout = Number(process.argv[5]) || 10000;
+  let gameCount = process.argv[5];
+  let repeatTimeout = Number(process.argv[6]) || 10000;
   let repeatForever = (gameCount === 'infinity');
   gameCount = Number(gameCount) || 1;
 
