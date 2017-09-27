@@ -1,48 +1,59 @@
-//Your AI logic here.
-function decideMove(gameState) {
-  return gameState.moves.concat(Math.floor(Math.random() * gameState.boardHeights.length));
+if(process.argv[2] === '--help') {
+  printHelp();
+  process.exit(0);
 }
 
+let { username, password } = parseCredentials();
+let { gameCount, repeatTimeout, repeatForever } = parseOptions();
 
-//Only look down here if you want to see how this bot interacts with the server
-
-// let { username, password, gameCount, repeatTimeout, repeatForever }
-
-let myBot = new Bot(decideMove, username, password);
-
-class Bot {
-  constructor(decideMove) {
-    this.decideMove = decideMove;
-  }
-
-}
-
-
-let userName = process.argv[2];
-let password = process.argv[3];
-let gameCount = process.argv[4];
-let repeatTimeout = process.argv[5];
-let repeatForever = (gameCount === 'infinity');
-
-gameCount = Number(gameCount) || 1;
-
-if(!userName || !password) {
-  console.log("Please pass userName and password via command line.");
-  console.log("Usage: node lib/iWinBot.js userName password gameCount repeatTimeout");
-  console.log("gameCount will default to 1");
-  console.log("To repeat infinitely input 'infinity' as gameCount");
-  console.log("repeatTimeout will default to 10 seconds");
-  process.exit(1);
-}
 
 var jayson = require('jayson');
 var Promise = require("bluebird");
 
-var client = jayson.client.http('http://quick-connect.herokuapp.com/rpc');
-// var client = jayson.client.http('http://localhost:3002/rpc');
+const RPC_URL = 'http://quick-connect.herokuapp.com/rpc';
+// const RPC_URL = 'http://localhost:3002/rpc';  //For local testing
+
+var client = jayson.client.http(RPC_URL);
 var request = Promise.promisify(client.request, {context: client});
 
 // startGame();
+
+
+//--------------------Lib Code--------------------//
+
+function printHelp() {
+  console.log("Usage: node lib/iWinBot.js userName password gameCount repeatTimeout");
+  console.log("gameCount will default to 1");
+  console.log("To repeat infinitely input 'infinity' as gameCount");
+  console.log("repeatTimeout will default to 10 seconds");
+}
+
+function parseCredentials() {
+  let userName = process.argv[2];
+  let password = process.argv[3];
+
+  if(!userName || !password) {
+    console.log("Please pass userName and password via command line.");
+    printHelp();
+
+    process.exit(1);
+  }
+
+  return {
+    userName,
+    password
+  }
+}
+
+function parseOptions() {
+  let gameCount = process.argv[4];
+  let repeatTimeout = process.argv[5];
+  let repeatForever = (gameCount === 'infinity');
+
+  gameCount = Number(gameCount) || 1;
+
+  return { gameCount, repeatTimeout, repeatForever };
+}
 
 function startGame() {
   joinGame(userName, password).then(gameId => {
@@ -50,7 +61,6 @@ function startGame() {
     play(gameId);
   });
 }
-
 
 function play(gameId) {
   waitForMyTurn(gameId).then(gameState => {

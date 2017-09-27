@@ -7,7 +7,7 @@
   "scripts": {
     "build": "./node_modules/.bin/babel --presets es2015 src --out-dir lib --ignore test.js",
     "watch": "yarn build -- --watch",
-    "start": "yarn build && node lib/runBot.js"
+    "start": "yarn build && node lib/index.js"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
