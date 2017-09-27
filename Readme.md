@@ -13,7 +13,7 @@ You can get one here: [Quick Connect new bot signup](http://quick-connect.heroku
 run `yarn`
 
 # Play on the servers with randomBot
-run `yarn start username password randomBot` (inserting your username and password created in the previous step)  
+run `yarn start username password randomBot` (inserting your username and password created in the first step)  
 
 This will join or create a game with the randomBot account. If your game doesn't start immediately, you will have to either wait for an opponent, or you can create another bot account, and run randomBot in another terminal window to compete against yourself. (Note: The same bot account cannot be matched against itself, so you **must** sign up for another bot account in order to play against yourself)
 
