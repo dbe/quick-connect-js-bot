@@ -39,7 +39,7 @@ function parseCredentials(program) {
 }
 
 function loadBot(program) {
-  let botPath = program.botPath || 'lib/bots/randomBot.js';
+  let botPath = program.botPath || 'node_modules/quick-connect-js-bot/lib/bots/randomBot.js';
   botPath = path.resolve(botPath);
 
   if (!fs.existsSync(botPath)) {
