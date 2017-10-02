@@ -20,13 +20,13 @@ program
   .parse(process.argv);
 
 const { username, password } = parseCredentials(program);
-const decideMove = loadBot(program);
+const Bot = loadBot(program);
 const request = buildRequest(program);
 const { gameCount, repeatForever } = parseGameCount(program);
 const repeatTimeout = program.repeatTimeout || 10000;
 
-//TODO: Start the game here
-
+let bot = new Bot(username, password, request, gameCount, repeatForever, repeatTimeout);
+bot.startGame();
 
 function parseCredentials(program) {
   //Needed to do this because commander.js only enforces 'required' arguments when a subset of them is passed in
