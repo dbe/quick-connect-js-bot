@@ -41,3 +41,18 @@ export default RandomBot;
 ```
 
 After creating this file, in order to use your bot on the servers, pass in the path to this file as the -b or --botpath argument to quick-connect.
+
+# GameState object
+```
+GameState: {
+  gameId: uuid,
+  isPlayer0First: boolean,
+  player0: string,  //userName
+  player1: string,  //userName
+  boardHeights: List<int>, // Each int represents the height of that column
+  winCondition: List<int>, //Array of lengths of connected links needed for victory. [4] represents standard connect4
+  moves: List<int> //List of columns played in. Players moves alternate in this list
+  isGameOver: boolean,
+  isPlayer0Winner: boolean (nullable for draw)
+}
+```

@@ -30,7 +30,7 @@ const { username, password } = parseCredentials(program);
 const Bot = loadBot(program);
 const request = buildRequest(program);
 const { gameCount, repeatForever } = parseGameCount(program);
-const repeatTimeout = program.repeatTimeout || 10000;
+const repeatTimeout = program.timeout || 10000;
 
 let bot = new Bot(username, password, request, gameCount, repeatForever, repeatTimeout);
 bot.startGame();
@@ -64,8 +64,8 @@ function buildRequest(program) {
 }
 
 function parseGameCount(program) {
-  let repeatForever = (program.gameCount === 'infinity');
-  let gameCount = Number(program.gameCount) || 1;
+  let repeatForever = (program.gamecount === 'infinity');
+  let gameCount = Number(program.gamecount) || 1;
 
   return { gameCount, repeatForever };
 }
