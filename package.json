@@ -4,6 +4,9 @@
   "repository": "git@github.com:dbe/quick-connect-js-bot.git",
   "author": "Brian Ethier <davidbrianethier@gmail.com>",
   "license": "MIT",
+  "bin": {
+    "quick-connect": "./lib/quick-connect.js"
+  },
   "scripts": {
     "build": "./node_modules/.bin/babel --presets es2015 src --out-dir lib --ignore test.js",
     "watch": "yarn build -- --watch",
@@ -15,6 +18,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.0",
+    "commander": "^2.11.0",
     "jayson": "^2.0.4"
   }
 }
