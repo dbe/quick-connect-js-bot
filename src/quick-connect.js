@@ -19,18 +19,27 @@ program
   .option('-r --rpc-url <rpc-url>', 'Alternative RPC-URL, useful for local testing. Ex: -r localhost:3002/rpc')
   .parse(process.argv);
 
-//Needed to do this because commander.js only enforces 'required' arguments when a subset of them is passed in
-if(program.username === undefined || program.password === undefined) {
-  console.log("Username and password are required");
-  process.exit(1);
+const { username, password } = parseCredentials(program);
+const decideMove = loadBot(program);
+const request = buildRequest(program);
+const { gameCount, repeatForever } = parseGameCount(program);
+const repeatTimeout = program.repeatTimeout || 10000;
+
+//TODO: Start the game here
+
+
+function parseCredentials(program) {
+  //Needed to do this because commander.js only enforces 'required' arguments when a subset of them is passed in
+  if(program.username === undefined || program.password === undefined) {
+    console.log("Username and password are required");
+    process.exit(1);
+  }
+
+  return { username: program.username, password: program.password };
 }
 
-const decideMove = loadBot(program.botpath);
-
-
-
-function loadBot(botPath) {
-  botPath = botPath || 'lib/bots/randomBot.js';
+function loadBot(program) {
+  let botPath = program.botPath || 'lib/bots/randomBot.js';
   botPath = path.resolve(botPath);
 
   if (!fs.existsSync(botPath)) {
@@ -41,11 +50,15 @@ function loadBot(botPath) {
   return require(botPath).default;
 }
 
+function buildRequest(program) {
+  let rpcUrl = program.rpcUrl || 'http://quick-connect.herokuapp.com/rpc';
+  var client = jayson.client.http(rpcUrl);
+  return Promise.promisify(client.request, {context: client});
+}
 
-console.log("In quick connect js")
-console.log(program.username);
-console.log(program.password);
-console.log(program.botpath);
-console.log(program.gamecount);
-console.log(program.timeout);
-console.log(program.rpcUrl);
+function parseGameCount(program) {
+  let repeatForever = (program.gameCount === 'infinity');
+  let gameCount = Number(program.gameCount) || 1;
+
+  return { gameCount, repeatForever };
+}
