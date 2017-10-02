@@ -13,20 +13,31 @@ You can get one here: [Quick Connect new bot signup](http://quick-connect.heroku
 run `yarn`
 
 # Play on the servers with randomBot
-run `yarn start username password randomBot` (inserting your username and password created in the first step)  
+run `quick-connect username password [options]`  
+
+For help as to which command line options are available run `quick-connect --help`
 
 This will join or create a game with the randomBot account. If your game doesn't start immediately, you will have to either wait for an opponent, or you can create another bot account, and run randomBot in another terminal window to compete against yourself. (Note: The same bot account cannot be matched against itself, so you **must** sign up for another bot account in order to play against yourself)
 
-# Yarn start options
-`yarn start` takes multiple command line args. The full invocation is:  
-
-`yarn start username password botName [gameCount] [repeatTimeout]`  
-
-- username: The username of your bot account. Must have signed up on the service website first.
-- password: The password of your bot account.
-- botName: Name of your bot file located in the bots/ directory. Example: bots/randomBot.js should be passed in as `randomBot`
-- gameCount(optional): Either a number or 'infinity'. The number of games you want your bot to finish before the command exits. Defaults to 1.
-- repeatTimeout(optional): Number of milliseconds between the end of your game, and the start of a new one. Defaults to 10000.
-
 # Create your own bot
-In order to create your own bot, you need to create a javascript file in the bots folder. `bots/myBot.js` is an empty file with the correct skeleton to extend. You should export a function which takes a gameState and returns a move (column number).
+In order to create your own bot, you can inherit from the Bot class shipped with the npm module and override its decideMove function.
+
+An example of implementing your own random bot would be:
+
+```
+import Bot from '../Bot.js';
+
+class RandomBot extends Bot {
+  constructor(...args) {
+    super(...args);
+  }
+
+  decideMove(gameState) {
+    return Math.floor(Math.random() * gameState.boardHeights.length);
+  }
+}
+
+export default RandomBot;
+```
+
+After creating this file, in order to use your bot on the servers, pass in the path to this file as the -b or --botpath argument to quick-connect.
