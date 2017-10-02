@@ -16,6 +16,7 @@ class Bot {
   startGame() {
     this.joinGame().then(gameId => {
       console.log("Joined game: ", gameId);
+      process.stdout.write("Waiting for game to start: ");
       this.play(gameId);
     });
   }
@@ -56,7 +57,8 @@ class Bot {
       } else {
         process.stdout.write('*');
         if(!this.isGameOver(gameState)) {
-          setTimeout(this.pollUntilMyTurn.bind(this), 500, gameId, resolve);
+          let timeout = gameState.isStarted ? 500 : 10000;
+          setTimeout(this.pollUntilMyTurn.bind(this), timeout, gameId, resolve);
         }
       }
     });
