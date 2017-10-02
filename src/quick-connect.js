@@ -26,8 +26,6 @@ program
   .option('-r --rpc-url <rpc-url>', 'Alternative RPC-URL, useful for local testing. Ex: -r localhost:3002/rpc')
   .parse(process.argv);
 
-console.log(program);
-
 const { username, password } = parseCredentials(program);
 const Bot = loadBot(program);
 const request = buildRequest(program);
