@@ -1,6 +1,6 @@
 {
   "name": "quick-connect-js-bot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "repository": "git@github.com:dbe/quick-connect-js-bot.git",
   "author": "Brian Ethier <davidbrianethier@gmail.com>",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "babel-preset-es2015": "^6.24.1"
   },
   "dependencies": {
+    "babel-register": "^6.26.0",
     "bluebird": "^3.5.0",
     "commander": "^2.11.0",
     "jayson": "^2.0.4"

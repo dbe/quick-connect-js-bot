@@ -6,6 +6,13 @@ var path = require('path');
 var program = require('commander');
 var Promise = require("bluebird");
 
+//Used so requires auto transpile es6
+require("babel-register")({
+    presets: [
+        "es2015"
+    ],
+});
+
 program
   .version('0.1.0')
   .arguments('<username> <password>')
@@ -18,6 +25,8 @@ program
   .option('-t --timeout <timeout>', 'Timeout after a game, before bot rejoins (milliseconds)', parseInt)
   .option('-r --rpc-url <rpc-url>', 'Alternative RPC-URL, useful for local testing. Ex: -r localhost:3002/rpc')
   .parse(process.argv);
+
+console.log(program);
 
 const { username, password } = parseCredentials(program);
 const Bot = loadBot(program);
@@ -39,15 +48,15 @@ function parseCredentials(program) {
 }
 
 function loadBot(program) {
-  let botPath = program.botPath || 'node_modules/quick-connect-js-bot/lib/bots/randomBot.js';
-  botPath = path.resolve(botPath);
+  let botpath = program.botpath || 'node_modules/quick-connect-js-bot/lib/bots/randomBot.js';
+  botpath = path.resolve(botpath);
 
-  if (!fs.existsSync(botPath)) {
-    console.log(`${botPath} doesn't exist. Please provide a valid bot.`)
+  if (!fs.existsSync(botpath)) {
+    console.log(`${botpath} doesn't exist. Please provide a valid bot.`)
     process.exit(1);
   }
 
-  return require(botPath).default;
+  return require(botpath).default;
 }
 
 function buildRequest(program) {
