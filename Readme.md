@@ -25,7 +25,7 @@ In order to create your own bot, you can inherit from the Bot class shipped with
 An example of implementing your own random bot would be:
 
 ```
-import Bot from '../Bot.js';
+import Bot from 'quick-connect-js-bot';
 
 class RandomBot extends Bot {
   constructor(...args) {
