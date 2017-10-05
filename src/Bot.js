@@ -52,6 +52,11 @@ class Bot {
 
   pollUntilMyTurn(gameId, resolve) {
     this.getGameState(gameId).then(gameState => {
+      if(!this.isMyGame(gameState)) {
+        console.log("You tried joining a game which you are not a part of.");
+        process.exit(1);
+      }
+
       if(gameState.isStarted && this.isMyTurn(gameState)) {
         resolve(gameState);
       } else {
@@ -97,6 +102,10 @@ class Bot {
     }
 
     return gameState.isGameOver;
+  }
+
+  isMyGame(gameState) {
+    return (gameState.player0 === this.userName) || (gameState.player1 === this.userName);
   }
 
   didIWin(gameState) {
