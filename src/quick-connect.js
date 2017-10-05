@@ -24,6 +24,7 @@ program
   .option('-g --gamecount <gamecount>', '# of games to play before exiting. enter "infinity" to run forever')
   .option('-t --timeout <timeout>', 'Timeout after a game, before bot rejoins (milliseconds)', parseInt)
   .option('-r --rpc-url <rpc-url>', 'Alternative RPC-URL, useful for local testing. Ex: -r localhost:3002/rpc')
+  .option('-u --uuid <uuid>', 'Play a game in progress. Ex: -u a2121321-440c-4941-9a94-c8be8c6bb294')
   .parse(process.argv);
 
 const { username, password } = parseCredentials(program);
@@ -33,7 +34,11 @@ const { gameCount, repeatForever } = parseGameCount(program);
 const repeatTimeout = program.timeout || 10000;
 
 let bot = new Bot(username, password, request, gameCount, repeatForever, repeatTimeout);
-bot.startGame();
+if (program.uuid) {
+  bot.play(gameId);
+} else {
+  bot.startGame();
+}
 
 function parseCredentials(program) {
   //Needed to do this because commander.js only enforces 'required' arguments when a subset of them is passed in
