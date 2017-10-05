@@ -56,3 +56,36 @@ GameState: {
   isPlayer0Winner: boolean (nullable for draw)
 }
 ```
+
+# BotUtils
+
+Utility functions are available for assistance when dealing with the Game State.
+
+```
+import { BotUtils } from 'quick-connect-js-bot';
+
+/* Given a game state:
+ * gameState = {
+ *  boardHeights: [3, 3, 3],
+ *  moves: [0, 1, 1, 1]
+ * }
+ */
+decideMove(gameState) {
+  const moves = BotUtils.getAllAvailableMoves(gameState);
+  console.log(moves); // Logs [1, 3]
+}
+```
+
+Here are the functions available:
+
+`buildBoardState(moves, boardHeights, isPlayer0First)` - Returns the state of the game board as an array or arrays, where each column is represented by an array that holds the token indicated by the player number (0 or 1).
+
+`columnAvailable(GameState, column)` - Returns true if the provided column index has empty spaces
+
+`containsToken(BoardState, column, row)` - Returns true if the provided row and column contains a token, given a BoardState
+
+`getAllAvailableMoves(GameState)` - Returns a list of columns that are available to play
+
+`isBoardEmpty(GameState)` - Returns true if GameState.moves is empty
+
+`isBoardFull(GameState)` - Returns true if all spaces on the board contain a token
