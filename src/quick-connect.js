@@ -20,11 +20,11 @@ program
     program.username = username;
     program.password = password;
   })
-  .option('-b --botpath <botpath>', 'Path to bot (default randomBot)')
-  .option('-g --gamecount <gamecount>', '# of games to play before exiting. enter "infinity" to run forever')
+  .option('-b --bot-path <bot-path>', 'Path to bot (default randomBot)')
+  .option('-c --game-count <game-count>', '# of games to play before exiting. enter "infinity" to run forever')
   .option('-t --timeout <timeout>', 'Timeout after a game, before bot rejoins (milliseconds)', parseInt)
   .option('-r --rpc-url <rpc-url>', 'Alternative RPC-URL, useful for local testing. Ex: -r localhost:3002/rpc')
-  .option('-u --uuid <uuid>', 'Play a game in progress. Ex: -u a2121321-440c-4941-9a94-c8be8c6bb294')
+  .option('-g --game-id <game-id>', 'Play a game in progress. Ex: -g a2121321-440c-4941-9a94-c8be8c6bb294')
   .parse(process.argv);
 
 const { username, password } = parseCredentials(program);
@@ -34,8 +34,8 @@ const { gameCount, repeatForever } = parseGameCount(program);
 const repeatTimeout = program.timeout || 10000;
 
 let bot = new Bot(username, password, request, gameCount, repeatForever, repeatTimeout);
-if (program.uuid) {
-  bot.play(gameId);
+if (program.gameId) {
+  bot.play(program.gameId);
 } else {
   bot.startGame();
 }
@@ -51,15 +51,15 @@ function parseCredentials(program) {
 }
 
 function loadBot(program) {
-  let botpath = program.botpath || 'node_modules/quick-connect-js-bot/lib/bots/randomBot.js';
-  botpath = path.resolve(botpath);
+  let botPath = program.botPath || 'node_modules/quick-connect-js-bot/lib/bots/randomBot.js';
+  botPath = path.resolve(botPath);
 
-  if (!fs.existsSync(botpath)) {
-    console.log(`${botpath} doesn't exist. Please provide a valid bot.`)
+  if (!fs.existsSync(botPath)) {
+    console.log(`${botPath} doesn't exist. Please provide a valid bot.`)
     process.exit(1);
   }
 
-  return require(botpath).default;
+  return require(botPath).default;
 }
 
 function buildRequest(program) {
@@ -69,8 +69,8 @@ function buildRequest(program) {
 }
 
 function parseGameCount(program) {
-  let repeatForever = (program.gamecount === 'infinity');
-  let gameCount = Number(program.gamecount) || 1;
+  let repeatForever = (program.gameCount === 'infinity');
+  let gameCount = Number(program.gameCount) || 1;
 
   return { gameCount, repeatForever };
 }
