@@ -1,5 +1,3 @@
-
-
 function buildBoardState(moves, boardHeights, isPlayer0First) {
   let state = [];
   let player = isPlayer0First ? 0 : 1;
