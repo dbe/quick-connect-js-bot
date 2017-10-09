@@ -76,16 +76,68 @@ decideMove(gameState) {
 }
 ```
 
-Here are the functions available:
+## API
 
-`buildBoardState(moves, boardHeights, isPlayer0First)` - Returns the state of the game board as an array or arrays, where each column is represented by an array that holds the token indicated by the player number (0 or 1).
+#### checkWin()
+```
+checkWin(gameState, player, column, row, direction)
+```
 
-`columnAvailable(GameState, column)` - Returns true if the provided column index has empty spaces
+Returns true if the provided player (0 or 1) has enough tokens in a row to fulfill the `gameState.winCondition`.
+> The direction parameter should be an object with properties for x and y to indicate what direction to look from the provided column and row. For example calling `checkWin(gameState, 1, 0, 0, {x: 0, y: 1})` will check tokens in column 0 starting from row 0 to see if player 1 has won the game.
 
-`containsToken(BoardState, column, row)` - Returns true if the provided row and column contains a token, given a BoardState
+### columnAvailable()
+```
+columnAvailable(gameState, column)
+```
 
-`getAllAvailableMoves(GameState)` - Returns a list of columns that are available to play
+Returns true if the provided column index has empty spaces
 
-`isBoardEmpty(GameState)` - Returns true if GameState.moves is empty
+### containsToken()
+```
+containsToken(gameState, column, row)
+```
 
-`isBoardFull(GameState)` - Returns true if all spaces on the board contain a token
+Returns true if the provided row and column contains a token, given a BoardState
+
+### containsTokenForPlayer()
+```
+containsTokenForPlayer(gameState, player, column, row)
+```
+
+Returns true if the provided column and row contains a token and that token is the provided player's token.
+
+### getAllAvailableMoves()
+```
+getAllAvailableMoves(gameState)
+```
+
+Returns a list of columns that are available to make a move.
+
+### isBoardEmpty()
+```
+isBoardEmpty(gameState)
+```
+
+Returns true if the no player has made a move.
+
+### isBoardFull()
+```
+isBoardFull(gameState)
+```
+
+Returns true if all spaces on the board contain a token and no moves can be made.
+
+### isPlayerToken()
+```
+isPlayerToken(gameState, player, column, row)
+```
+
+Returns true if the provided column and row contains a token for the provided player (0 or 1).
+
+### playerHasWon()
+```
+playerHasWon(gameState, player)
+```
+
+Returns true if the provided player (0 or 1) has won the game. Checks all possible directions for the number of tokens to match the `gameState.winCondition`.
