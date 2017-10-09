@@ -56,3 +56,88 @@ GameState: {
   isPlayer0Winner: boolean (nullable for draw)
 }
 ```
+
+# BotUtils
+
+Utility functions are available for assistance when dealing with the Game State.
+
+```
+import { BotUtils } from 'quick-connect-js-bot';
+
+/* Given a game state:
+ * gameState = {
+ *  boardHeights: [3, 3, 3],
+ *  moves: [0, 1, 1, 1]
+ * }
+ */
+decideMove(gameState) {
+  const moves = BotUtils.getAllAvailableMoves(gameState);
+  console.log(moves); // Logs [1, 3]
+}
+```
+
+## API
+
+#### checkWin()
+```
+checkWin(gameState, player, column, row, direction)
+```
+
+Returns true if the provided player (0 or 1) has enough tokens in a row to fulfill the `gameState.winCondition`.
+> The direction parameter should be an object with properties for x and y to indicate what direction to look from the provided column and row. For example calling `checkWin(gameState, 1, 0, 0, {x: 0, y: 1})` will check tokens in column 0 starting from row 0 to see if player 1 has won the game.
+
+### columnAvailable()
+```
+columnAvailable(gameState, column)
+```
+
+Returns true if the provided column index has empty spaces
+
+### containsToken()
+```
+containsToken(gameState, column, row)
+```
+
+Returns true if the provided row and column contains a token, given a BoardState
+
+### containsTokenForPlayer()
+```
+containsTokenForPlayer(gameState, player, column, row)
+```
+
+Returns true if the provided column and row contains a token and that token is the provided player's token.
+
+### getAllAvailableMoves()
+```
+getAllAvailableMoves(gameState)
+```
+
+Returns a list of columns that are available to make a move.
+
+### isBoardEmpty()
+```
+isBoardEmpty(gameState)
+```
+
+Returns true if the no player has made a move.
+
+### isBoardFull()
+```
+isBoardFull(gameState)
+```
+
+Returns true if all spaces on the board contain a token and no moves can be made.
+
+### isPlayerToken()
+```
+isPlayerToken(gameState, player, column, row)
+```
+
+Returns true if the provided column and row contains a token for the provided player (0 or 1).
+
+### playerHasWon()
+```
+playerHasWon(gameState, player)
+```
+
+Returns true if the provided player (0 or 1) has won the game. Checks all possible directions for the number of tokens to match the `gameState.winCondition`.
