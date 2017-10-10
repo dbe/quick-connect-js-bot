@@ -8,9 +8,9 @@ var Promise = require("bluebird");
 
 //Used so requires auto transpile es6
 require("babel-register")({
-    presets: [
-        "es2015"
-    ],
+  presets: [
+    "es2015"
+  ],
 });
 
 program
